@@ -1,0 +1,11 @@
+<% if @goods.present? %>
+  <% @goods.each do |good| %>
+    <div class="list">
+    <% if good.image_url %>
+      <%= link_to (image_tag(good.image_url, style: "width: 70px;height: 100px;display: inline-block;")), good.url %>
+      <%end%>
+
+      <%= good.title %>
+    </div>
+  <% end %>
+<% end %>
