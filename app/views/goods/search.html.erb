@@ -1,5 +1,9 @@
 <h1>Amaserach</h1>
 <div class='content'>
+  <%= @response %>
+  <br>
+  <br>
+  <%= @aaa %>
   <div id="search-box">
     <%= form_tag('/', method: :get) do %>
         <%= text_field_tag :good, "",  id: "good_search", name: "keyword", placeholder: "キーワードを打ち込んでください", style: "width: 200px;"%><button title="検索" type="submit">検索</button>

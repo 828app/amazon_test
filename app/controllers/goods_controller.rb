@@ -1,5 +1,19 @@
 class GoodsController < ApplicationController
   def search
+    request = Vacuum.new(marketplace: 'JP',
+                         access_key: ENV['AWS_ACCESS_KEY_ID'],
+                         secret_key: ENV['AWS_SECRET_KEY'],
+                         partner_tag: ENV['ASSOCIATE_TAG'])
+    @response = request.search_items(title: 'startup',min_price:200)
+    @response = @response.to_h
+    @aaa= request.get_items(
+      item_ids: ['B0199980K4', 'B000HZD168', 'B01180YUXS', 'B00BKQTA4A'],
+      resources: ['Images.Primary.Small', 'ItemInfo.Title', 'ItemInfo.Features',
+              'Offers.Summaries.HighestPrice' , 'ParentASIN']
+)
+  end
+
+  def tes
     Amazon::Ecs.options = {
           associate_tag: ENV['ASSOCIATE_TAG'],
           AWS_access_key_id: ENV['AWS_ACCESS_KEY_ID'],
@@ -27,5 +41,6 @@ class GoodsController < ApplicationController
         @goods << good
       end
     end
+
   end
 end
