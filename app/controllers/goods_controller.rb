@@ -1,16 +1,25 @@
 class GoodsController < ApplicationController
   def search
-    request = Vacuum.new(marketplace: 'JP',
-                         access_key: ENV['AWS_ACCESS_KEY_ID'],
-                         secret_key: ENV['AWS_SECRET_KEY'],
-                         partner_tag: ENV['ASSOCIATE_TAG'])
-    @response = request.search_items(title: 'startup',min_price:200)
-    @response = @response.to_h
-    @aaa= request.get_items(
-      item_ids: ['B0199980K4', 'B000HZD168', 'B01180YUXS', 'B00BKQTA4A'],
-      resources: ['Images.Primary.Small', 'ItemInfo.Title', 'ItemInfo.Features',
-              'Offers.Summaries.HighestPrice' , 'ParentASIN']
-)
+    if params[:keyword].present?
+      request = Vacuum.new(marketplace: 'JP',
+                           access_key: ENV['AWS_ACCESS_KEY_ID'],
+                           secret_key: ENV['AWS_SECRET_KEY'],
+                           partner_tag: ENV['ASSOCIATE_TAG'])
+      keyword = params[:keyword]
+      response = request.search_items(title: keyword,item_page:1,sort_by:'Relevance')
+      puts response.to_h["SearchResult"]["Items"][0]["ASIN"]
+      asin = []
+      for num in 0..9 do
+         asin.push(response.to_h["SearchResult"]["Items"][num]["ASIN"])
+      end
+       @items= request.get_items(
+          item_ids: asin,
+          resources: ['Images.Primary.Small', 'ItemInfo.Title'])
+      @goods = []
+      for i in 0..9 do
+        @goods.push(@items.to_h["ItemsResult"]["Items"][i])
+      end
+    end
   end
 
   def tes
